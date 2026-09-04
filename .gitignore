@@ -1,0 +1,59 @@
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Packaging / build artifacts
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Test and type-checker caches
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# Secrets and local environment
+.env
+.env.*
+!.env.example
+
+# Generated datasets: keep the directory layout, ignore the contents.
+data/raw/*
+data/processed/*
+data/manifests/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!data/manifests/.gitkeep
+
+# Notebook checkpoints and generated report artifacts
+.ipynb_checkpoints/
+reports/*
+!reports/.gitkeep
+
+# Editors and OS cruft
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+
+# Secrets
+*.key
+*.pem
+credentials.json
+

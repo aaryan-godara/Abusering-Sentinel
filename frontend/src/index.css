@@ -1,0 +1,419 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ==========================================================================
+   AbuseRing Sentinel — forensic network investigation console
+   Palette is strictly black / white / gray / red.
+   ========================================================================== */
+
+:root {
+  --ink-950: #ffffff;
+  --ink-900: #fbfbfc;
+  --ink-800: #e3e3e7;
+  --ink-700: #d4d4da;
+  --ink-600: #c3c3cb;
+  --ink-500: #8e8e97;
+  --ink-400: #666666;
+  --ink-350: #555555;
+  --ink-300: #444444;
+  --ink-200: #333333;
+  --ink-100: #222222;
+  --ink-50: #111111;
+  --signal: #dc2626;
+  --signal-bright: #bf0d1e;
+  --signal-dim: #f0b8b8;
+
+  /* typography */
+  --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    'Segoe UI', sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* technical grid geometry */
+  --grid-cell: 32px;
+  --grid-line: rgba(10, 10, 12, 0.05);
+  --grid-line-major: rgba(10, 10, 12, 0.085);
+
+  /* glassmorphism surface tokens — control-center style frosted glass */
+  --glass-bg: rgba(255, 255, 255, 0.58);
+  --glass-bg-strong: rgba(255, 255, 255, 0.66);
+  --glass-border: rgba(255, 255, 255, 0.6);
+  --glass-blur: blur(20px) saturate(140%);
+  /* inner top highlight + inner white ring + faint outer ring + diffuse drop.
+     The outer 1px dark ring carries the panel edge now that the border is white. */
+  --glass-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.4),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.3),
+    0 0 0 1px rgba(10, 10, 12, 0.08),
+    0 2px 6px rgba(10, 10, 12, 0.05),
+    0 12px 32px -12px rgba(10, 10, 12, 0.18),
+    0 28px 64px -32px rgba(10, 10, 12, 0.22);
+  --glass-shadow-strong:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.45),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.34),
+    0 0 0 1px rgba(10, 10, 12, 0.1),
+    0 2px 8px rgba(10, 10, 12, 0.06),
+    0 16px 40px -14px rgba(10, 10, 12, 0.2),
+    0 34px 72px -34px rgba(10, 10, 12, 0.26);
+  --glass-radius: 14px;
+  --glass-ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  @apply bg-ink-950 text-ink-100 antialiased;
+  margin: 0;
+  overflow: hidden;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.55;
+  letter-spacing: 0;
+  font-feature-settings: 'tnum' 1, 'cv05' 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* --------------------------------------------------------------------------
+   Typography — modern sans UI, monospace reserved for identifiers and numbers.
+   Scale: heading 15 · value 16/14 · body 13 · footnote 12 · label 10.5
+   Tracking is used only on small uppercase labels.
+   -------------------------------------------------------------------------- */
+
+/* Main heading — product wordmark, workspace notices. */
+.ui-heading {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  color: var(--ink-50);
+}
+
+/* Uppercase micro-label: labels and legends. */
+.label-caps {
+  font-family: var(--font-sans);
+  font-size: 10.5px;
+  font-weight: 500;
+  line-height: 1.45;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+  color: var(--ink-350);
+}
+
+/* Panel title. */
+.panel-title {
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.045em;
+  text-transform: uppercase;
+  color: var(--ink-50);
+}
+
+/* Panel title suffix / provenance. */
+.panel-meta {
+  font-family: var(--font-sans);
+  font-size: 10.5px;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-350);
+}
+
+/* Body copy — prose, statements, descriptions. */
+.body-text {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.6;
+  letter-spacing: 0;
+  color: var(--ink-100);
+}
+
+/* Secondary body copy — provenance notes, caveats. Never pale. */
+.body-muted {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.55;
+  letter-spacing: 0;
+  color: var(--ink-350);
+}
+
+/* Important value — decisions, priorities, inline readouts. */
+.value-strong {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: -0.005em;
+  color: var(--ink-50);
+}
+
+/* Headline value — risk score, subject id. */
+.value-display {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: var(--ink-50);
+}
+
+/* Technical identifier — user / device / IP ids, graph node ids. */
+.tech-id {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.015em;
+}
+
+/* Numeric readout — risk scores, deltas, counts. */
+.tech-num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.015em;
+}
+
+/* --------------------------------------------------------------------------
+   Technical grid — graph paper. Thin lines, low contrast, no image, no gradient.
+   -------------------------------------------------------------------------- */
+
+.tech-grid {
+  background-color: var(--ink-950);
+  background-image:
+    /* major every 5th cell */
+    linear-gradient(to right, var(--grid-line-major) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line-major) 1px, transparent 1px),
+    /* minor cells */
+    linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+  background-size:
+    calc(var(--grid-cell) * 5) calc(var(--grid-cell) * 5),
+    calc(var(--grid-cell) * 5) calc(var(--grid-cell) * 5),
+    var(--grid-cell) var(--grid-cell),
+    var(--grid-cell) var(--grid-cell);
+  background-position: 0 0, 0 0, 0 0, 0 0;
+}
+
+/* Panels floating above the graph — frosted white glass. */
+.floating-panel {
+  background-color: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--glass-radius);
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+}
+
+.floating-panel-strong {
+  background-color: var(--glass-bg-strong);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--glass-radius);
+  box-shadow: var(--glass-shadow-strong);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+}
+
+/* Inner sheen — a soft top-down white gradient reading as light on glass.
+   Kept faint so the grid / graph stays visible through the surface. */
+.floating-panel,
+.floating-panel-strong {
+  background-image: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.28),
+    rgba(255, 255, 255, 0.06) 42%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  /* clip children to the rounded corners without creating a scroll trap */
+  overflow: hidden;
+}
+
+/* Collapse / expand transition for floating panels. */
+.panel-collapse {
+  transition: opacity 240ms var(--glass-ease), transform 240ms var(--glass-ease);
+}
+
+.panel-collapse-hidden {
+  opacity: 0;
+  transform: scale(0.98);
+  pointer-events: none;
+}
+
+/* Collapsible side column: opacity + translate.
+   No `will-change` here: promoting opacity turns the column into a backdrop
+   root, which would stop the glass panels inside it from sampling the grid. */
+.panel-column {
+  transition: opacity 260ms var(--glass-ease), transform 260ms var(--glass-ease),
+    width 260ms var(--glass-ease), visibility 260ms var(--glass-ease);
+}
+
+.panel-column-collapsed {
+  opacity: 0;
+  pointer-events: none;
+  /* keep collapsed content out of the accessibility + hit-test tree */
+  visibility: hidden;
+}
+
+.panel-column-collapsed-left {
+  transform: translateX(-14px) scale(0.98);
+}
+
+.panel-column-collapsed-right {
+  transform: translateX(14px) scale(0.98);
+}
+
+/* Tiny floating reopen / collapse control — glass chip. */
+.glass-chip {
+  background-color: var(--glass-bg-strong);
+  background-image: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.34),
+    rgba(255, 255, 255, 0.06) 60%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  border: 1px solid var(--glass-border);
+  border-radius: 10px;
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  transition: color 240ms var(--glass-ease), border-color 240ms var(--glass-ease),
+    background-color 240ms var(--glass-ease), box-shadow 240ms var(--glass-ease),
+    opacity 240ms var(--glass-ease);
+}
+
+button.glass-chip:hover {
+  border-color: rgba(220, 38, 38, 0.5);
+  color: var(--signal-bright);
+}
+
+/* Live status dot — slow, low-amplitude pulse. */
+.status-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex: none;
+}
+
+.status-dot-red {
+  background: var(--signal);
+  box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.45);
+  animation: status-pulse 2.4s var(--glass-ease) infinite;
+}
+
+.status-dot-gray {
+  background: var(--ink-500);
+}
+
+@keyframes status-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 5px rgba(220, 38, 38, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .status-dot-red {
+    animation: none;
+  }
+}
+
+/* Corner ticks — technical instrument framing for floating panels. */
+.corner-ticks {
+  position: relative;
+}
+
+.corner-ticks::before,
+.corner-ticks::after {
+  content: '';
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  pointer-events: none;
+  border-color: var(--signal);
+}
+
+.corner-ticks::before {
+  top: 5px;
+  left: 5px;
+  border-top: 1px solid;
+  border-left: 1px solid;
+}
+
+.corner-ticks::after {
+  bottom: 5px;
+  right: 5px;
+  border-bottom: 1px solid;
+  border-right: 1px solid;
+}
+
+/* --------------------------------------------------------------------------
+   Scrollbars — thin, monochrome
+   -------------------------------------------------------------------------- */
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--ink-500) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--ink-500);
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--ink-350);
+}
+
+/* --------------------------------------------------------------------------
+   force-graph canvas tooltip — override the library default styling
+   -------------------------------------------------------------------------- */
+
+.float-tooltip-kap {
+  border-radius: 10px !important;
+  border: 1px solid rgba(10, 10, 12, 0.1) !important;
+  background: rgba(255, 255, 255, 0.72) !important;
+  backdrop-filter: var(--glass-blur) !important;
+  -webkit-backdrop-filter: var(--glass-blur) !important;
+  box-shadow: var(--glass-shadow) !important;
+  color: #111111 !important;
+  /* identifier readout — monospace is deliberate here */
+  font: 500 12px/1.4 var(--font-mono) !important;
+  letter-spacing: -0.015em !important;
+  text-transform: none !important;
+  padding: 4px 8px !important;
+}
+
+/* Native focus ring in the console palette. */
+:focus-visible {
+  outline: 1px solid var(--signal);
+  outline-offset: 1px;
+}
+
+/* Selection highlight. */
+::selection {
+  background: var(--signal-dim);
+  color: var(--ink-50);
+}
