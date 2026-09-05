@@ -1,11 +1,12 @@
 # AbuseRing Sentinel
 **Graph Intelligence for Coordinated Fraud Detection**
 
-**Live Dashboard - https://aryandev.dpdns.org/**
-
 ![Python](https://img.shields.io/badge/Python-3.11-blue) ![React](https://img.shields.io/badge/React-18-blue) ![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-green) ![XGBoost](https://img.shields.io/badge/XGBoost-1.7+-orange) ![Status](https://img.shields.io/badge/Status-Complete-success)
 
 AbuseRing Sentinel is an end-to-end machine learning and graph intelligence platform designed to detect coordinated fraud and abuse rings. By combining behavioral ML with heterogeneous graph relationships, it identifies groups of accounts that appear independent in isolation but are linked through shared infrastructure and behavior.
+
+
+**Live Dashboard - [https://aryandev.dpdns.org/](https://aryandev.dpdns.org/users/USR_00000085)**
 
 ---
 
