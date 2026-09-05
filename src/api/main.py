@@ -3,10 +3,14 @@
 from __future__ import annotations
 
 import logging
+import os
+from pathlib import Path
 from typing import Any, List
 
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse, HTMLResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import ValidationError
 
 from src.api.dependencies import (
@@ -36,9 +40,20 @@ app = FastAPI(
 )
 
 # CORS configuration for local frontend development
+allowed_origins = [
+    "http://localhost",
+    "http://localhost:3000",
+    "http://localhost:5173",
+    "http://127.0.0.1:5173"
+]
+
+frontend_url = os.getenv("FRONTEND_URL")
+if frontend_url:
+    allowed_origins.append(frontend_url)
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost", "http://localhost:3000", "http://localhost:5173", "http://127.0.0.1:5173"],
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -246,4 +261,45 @@ def batch_investigate(
         except ValueError:
             pass
     return res
+
+# ---------------------------------------------------------------------------
+# Frontend SPA serving
+# ---------------------------------------------------------------------------
+
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
+FRONTEND_DIST = BASE_DIR / "frontend" / "dist"
+
+# Known API path prefixes — never serve index.html for these.
+_API_PREFIXES = ("/health", "/review-queue", "/score", "/investigate", "/docs", "/openapi.json", "/redoc")
+# API sub-paths under /users/ (risk, investigation, evidence) have 3+ segments.
+# React route /users/{id} has exactly 2 segments and is safe to serve as SPA.
+
+if FRONTEND_DIST.exists():
+    # Serve Vite-hashed JS/CSS bundles.
+    app.mount("/assets", StaticFiles(directory=str(FRONTEND_DIST / "assets")), name="assets")
+
+    @app.get("/favicon.svg", include_in_schema=False)
+    def serve_favicon():
+        return FileResponse(FRONTEND_DIST / "favicon.svg")
+
+    @app.get("/icons.svg", include_in_schema=False)
+    def serve_icons():
+        return FileResponse(FRONTEND_DIST / "icons.svg")
+
+    @app.get("/{full_path:path}", response_class=HTMLResponse, include_in_schema=False)
+    async def serve_frontend(request: Request, full_path: str = ""):
+        """Catch-all that serves the React SPA for any non-API path."""
+        # Guard: never intercept API routes.
+        path = request.url.path
+        if any(path.startswith(prefix) for prefix in _API_PREFIXES):
+            raise HTTPException(status_code=404, detail="Not found")
+        # /users/{id}/risk, /users/{id}/investigation, /users/{id}/evidence
+        # have 3+ path segments — those are API routes handled above.
+        segments = [s for s in path.split("/") if s]
+        if len(segments) >= 3 and segments[0] == "users":
+            raise HTTPException(status_code=404, detail="Not found")
+        index_file = FRONTEND_DIST / "index.html"
+        if index_file.exists():
+            return index_file.read_text(encoding="utf-8")
+        raise HTTPException(status_code=404, detail="Frontend build not found")
 
