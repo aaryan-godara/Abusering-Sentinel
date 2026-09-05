@@ -8,46 +8,15 @@ AbuseRing Sentinel is an end-to-end machine learning and graph intelligence plat
 ---
 
 ### Main Dashboard
-<!--
-Add screenshot here.
-Example:
-![Main Dashboard](docs/images/main-dashboard.png)
--->
-[SPACE RESERVED FOR MAIN DASHBOARD SCREENSHOT]
+
+<img width="1917" height="962" alt="image" src="https://github.com/user-attachments/assets/1e7bcd6b-dcc5-498d-98b2-bf1d30e80d45" />
 
 ### Investigation Workspace
-<!--
-Add screenshot here.
-Example:
-![Investigation Workspace](docs/images/investigation-workspace.png)
--->
-[SPACE RESERVED FOR INVESTIGATION WORKSPACE SCREENSHOT]
 
-### Interactive Graph View
-<!--
-Add screenshot here.
-Example:
-![Interactive Graph View](docs/images/interactive-graph-view.png)
--->
-[SPACE RESERVED FOR INTERACTIVE GRAPH VIEW SCREENSHOT]
+<img width="1917" height="852" alt="image" src="https://github.com/user-attachments/assets/af91d948-7c15-443f-bdee-8f33270ac2c3" />
 
-### Risk Decision and Evidence Panel
-<!--
-Add screenshot here.
-Example:
-![Risk Decision and Evidence Panel](docs/images/risk-decision-evidence.png)
--->
-[SPACE RESERVED FOR RISK DECISION AND EVIDENCE PANEL SCREENSHOT]
 
-### Legitimate High-Connectivity Scenario
-<!--
-Add screenshot here.
-Example:
-![Legitimate High Connectivity](docs/images/legitimate-high-connectivity.png)
--->
-[SPACE RESERVED FOR LEGITIMATE HIGH-CONNECTIVITY SCENARIO SCREENSHOT]
 
----
 
 ## 🛑 Problem Statement
 Single-account fraud rules miss organized abuse. A ring operator registers many accounts, each individually unremarkable, then farms promotions, launders funds, or resells credit. The signal is not in any one account but in the *relationships* between users, devices, IPs, and transactions.
